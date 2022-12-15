@@ -946,6 +946,7 @@ class Geoserver:
         path: str,
         name: Optional[str] = None,
         workspace: Optional[str] = None,
+        sld_format: str = "ysld",
         sld_version: str = "1.0.0",
     ):
         """
@@ -955,6 +956,7 @@ class Geoserver:
         path : str
         name : str, optional
         workspace : str, optional
+        sld_format: str, optional - valid values "ysld" | "sld" - default "ysld" 
         sld_version : str, optional
 
         Notes
@@ -974,9 +976,14 @@ class Geoserver:
 
         url = "{}/rest/workspaces/{}/styles".format(self.service_url, workspace)
 
-        sld_content_type = "application/vnd.ogc.sld+xml"
-        if sld_version == "1.1.0" or sld_version == "1.1":
-            sld_content_type = "application/vnd.ogc.se+xml"
+        sld_content_type = ""
+
+        if sld_format == "ysld":
+            sld_content_type = "application/vnd.geoserver.ysld+yaml"
+        elif sld_format == "sld":
+            sld_content_type = "application/vnd.ogc.sld+xml"
+            if sld_version == "1.1.0" or sld_version == "1.1":
+                sld_content_type = "application/vnd.ogc.se+xml"
 
         header_sld = {"content-type": sld_content_type}
 
